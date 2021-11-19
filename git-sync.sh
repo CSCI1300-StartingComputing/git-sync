@@ -36,11 +36,17 @@ else
 fi
 
 # Remove .github directory because we do not want it to be public facing
+ls -la /root/source
+echo "Removing..."
 rm -rf /root/source/.github
+ls -la /root/source
 git add /root/source/.github
 git config user.email "csci1300@colorado.edu"
 git config user.name "1300 Bot"
+git status
+echo "Committing..."
 git commit --amend --no-edit
+git status
 
 git remote add destination "$DESTINATION_REPO"
 
