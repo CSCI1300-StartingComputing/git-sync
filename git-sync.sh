@@ -38,7 +38,9 @@ fi
 # Remove .github directory because we do not want it to be public facing
 rm -rf /root/source/.github
 git add /root/source/.github
-git commit --amend --no-edit --author "1300 Bot <csci1300@colorado.edu>"
+git config user.email "csci1300@colorado.edu"
+git config user.name "1300 Bot"
+git commit --amend --no-edit
 
 git remote add destination "$DESTINATION_REPO"
 
