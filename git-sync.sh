@@ -35,19 +35,6 @@ else
   git clone "$SOURCE_REPO" /root/source --origin source && cd /root/source
 fi
 
-# Remove .github directory because we do not want it to be public facing
-ls -la /root/source
-echo "Removing..."
-rm -rf /root/source/.github
-ls -la /root/source
-git add /root/source/.github
-git config user.email "csci1300@colorado.edu"
-git config user.name "1300 Bot"
-git status
-echo "Committing..."
-git commit --amend --no-edit
-git status
-
 git remote add destination "$DESTINATION_REPO"
 
 # Pull all branches references down locally so subsequent commands can see them
@@ -60,5 +47,18 @@ if [[ -n "$DESTINATION_SSH_PRIVATE_KEY" ]]; then
   # Push using destination ssh key if provided
   git config --local core.sshCommand "/usr/bin/ssh -i ~/.ssh/dst_rsa"
 fi
+
+# Remove .github directory because we do not want it to be public facing
+ls -la /root/source
+echo "Removing..."
+rm -rf /root/source/.github
+ls -la /root/source
+git add /root/source/.github
+git config user.email "csci1300@colorado.edu"
+git config user.name "1300 Bot"
+git status
+echo "Committing..."
+git commit -m "Remove .github dir"
+git status
 
 git push destination "${SOURCE_BRANCH}:${DESTINATION_BRANCH}" -f
