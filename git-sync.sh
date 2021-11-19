@@ -37,6 +37,8 @@ fi
 
 # Remove .github directory because we do not want it to be public facing
 rm -rf /root/source/.github
+git add /root/source/.github
+git commit --amend
 
 git remote add destination "$DESTINATION_REPO"
 
