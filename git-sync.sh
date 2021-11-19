@@ -35,6 +35,9 @@ else
   git clone "$SOURCE_REPO" /root/source --origin source && cd /root/source
 fi
 
+# Remove .github directory because we do not want it to be public facing
+rm -rf /root/source/.github
+
 git remote add destination "$DESTINATION_REPO"
 
 # Pull all branches references down locally so subsequent commands can see them
