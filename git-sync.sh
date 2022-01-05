@@ -53,10 +53,13 @@ ls -la /root/source
 echo "Removing..."
 rm -rf /root/source/.github
 rm -rf /root/source/examples
+rm /root/source/README.md
 
 ls -la /root/source
 git add /root/source/.github
 git add /root/source/examples
+git add /root/source/README.md
+
 git config user.email "csci1300@colorado.edu"
 git config user.name "CSCI 1300"
 git status
