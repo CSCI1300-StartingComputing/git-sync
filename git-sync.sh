@@ -52,13 +52,16 @@ fi
 ls -la /root/source
 echo "Removing..."
 rm -rf /root/source/.github
+rm -rf /root/source/examples
+
 ls -la /root/source
 git add /root/source/.github
+git add /root/source/examples
 git config user.email "csci1300@colorado.edu"
-git config user.name "1300 Bot"
+git config user.name "CSCI 1300"
 git status
 echo "Committing..."
-git commit -m "Remove .github dir"
+git commit -m "Update CSCI 1300 Files"
 git status
 
 git push destination "${SOURCE_BRANCH}:${DESTINATION_BRANCH}" -f
