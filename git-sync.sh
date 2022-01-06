@@ -30,10 +30,12 @@ echo "DESTINATION=$DESTINATION_REPO:$DESTINATION_BRANCH"
 
 if [[ -n "$SOURCE_SSH_PRIVATE_KEY" ]]; then
   # Clone using source ssh key if provided
-  git clone -c core.sshCommand="/usr/bin/ssh -i ~/.ssh/src_rsa" "$SOURCE_REPO" /root/source --origin source && cd /root/source
+  git clone -c core.sshCommand="/usr/bin/ssh -i ~/.ssh/src_rsa" "$SOURCE_REPO" /root/source --origin source
 else
-  git clone "$SOURCE_REPO" /root/source --origin source && cd /root/source
+  git clone "$SOURCE_REPO" /root/source --origin source
 fi
+
+cd /root/source
 
 git remote add destination "$DESTINATION_REPO"
 
@@ -49,18 +51,28 @@ if [[ -n "$DESTINATION_SSH_PRIVATE_KEY" ]]; then
 fi
 
 # Remove .github directory because we do not want it to be public facing
-ls -la /root/source
-echo "Removing..."
-rm -rf /root/source/.github
-rm -rf /root/source/examples
+echo "Current state of repo"
+ls -la
 
-mv /root/source/README-public.md /root/source/README.md
+echo "Replacing public README with README-public"
+mv README-public.md README.md
+rm README-public.md
 
-ls -la /root/source
-git add /root/source/.github
-git add /root/source/examples
-git add /root/source/README.md
-git add /root/source/README-public.md
+# Building a git add command by adding all files with an exclusion list
+gitAddCommand="git add --"
+
+# TO INCLUDE A NEW PUBLIC FILE OR DIRECTORY, ADD TO THE FOLLOWING ARRAY
+# Note that any valid pathspec (https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec)
+# can be included for including subdirectories, etc
+declare -a toInclude=("README.md")
+
+for i in "${toInclude[@]}"
+do
+    gitAddCommand=$gitAddCommand" ':$i'"
+done
+
+echo "Will run the following git add:\n$gitAddCommand"
+eval "$gitAddCommand"
 
 git config user.email "csci1300@colorado.edu"
 git config user.name "CSCI 1300"
