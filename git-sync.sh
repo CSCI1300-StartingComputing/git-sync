@@ -30,10 +30,12 @@ echo "DESTINATION=$DESTINATION_REPO:$DESTINATION_BRANCH"
 
 if [[ -n "$SOURCE_SSH_PRIVATE_KEY" ]]; then
   # Clone using source ssh key if provided
-  git clone -c core.sshCommand="/usr/bin/ssh -i ~/.ssh/src_rsa" "$SOURCE_REPO" /root/source --origin source && cd /root/source
+  git clone -c core.sshCommand="/usr/bin/ssh -i ~/.ssh/src_rsa" "$SOURCE_REPO" /root/source --origin source
 else
-  git clone "$SOURCE_REPO" /root/source --origin source && cd /root/source
+  git clone "$SOURCE_REPO" /root/source --origin source
 fi
+
+cd /root/source
 
 git remote add destination "$DESTINATION_REPO"
 
@@ -49,24 +51,34 @@ if [[ -n "$DESTINATION_SSH_PRIVATE_KEY" ]]; then
 fi
 
 # Remove .github directory because we do not want it to be public facing
-ls -la /root/source
-echo "Removing..."
-rm -rf /root/source/.github
-rm -rf /root/source/examples
+echo "Current state of repo"
+ls -la
 
-mv /root/source/README-public.md /root/source/README.md
+echo "Replacing public README with README-public"
+mv README-public.md README.md
 
-ls -la /root/source
-git add /root/source/.github
-git add /root/source/examples
-git add /root/source/README.md
-git add /root/source/README-public.md
+# TO EXCLUDE A PRIVATE FILE OR DIRECTORY, ADD TO THE FOLLOWING ARRAY
+# Note that any valid pathspec (https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec)
+# can be included for excluding subdirectories, etc
+declare -a toExclude=("README-public.md" # Public repo should only have the README which was replaced above.
+                      ".github" # Exclude workflows
+                      "examples" # Exclude internal examples
+                      ".gitignore" # Ignore gitignore for simplicity
+                      )
+
+# git rm all excluded pathspecs
+for i in "${toExclude[@]}"
+do
+    git rm $i
+done
 
 git config user.email "csci1300@colorado.edu"
 git config user.name "CSCI 1300"
+echo "Git status post-removal"
 git status
 echo "Committing..."
 git commit -m "Update CSCI 1300 Files"
+echo "Git status post-commit"
 git status
-
+echo "Pushing"
 git push destination "${SOURCE_BRANCH}:${DESTINATION_BRANCH}" -f
