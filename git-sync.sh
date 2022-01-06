@@ -56,6 +56,7 @@ ls -la
 
 echo "Replacing public README with README-public"
 mv README-public.md README.md
+git add README.md # Adding readme so it gets committed
 
 # TO EXCLUDE A PRIVATE FILE OR DIRECTORY, ADD TO THE FOLLOWING ARRAY
 # Note that any valid pathspec (https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec)
@@ -69,7 +70,7 @@ declare -a toExclude=("README-public.md" # Public repo should only have the READ
 # git rm all excluded pathspecs
 for i in "${toExclude[@]}"
 do
-    git rm -rf $i
+    git rm -rf --ignore-unmatch $i
 done
 
 git config user.email "csci1300@colorado.edu"
