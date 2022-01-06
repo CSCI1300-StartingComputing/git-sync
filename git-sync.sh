@@ -59,7 +59,7 @@ mv README-public.md README.md
 
 # TO EXCLUDE A PRIVATE FILE OR DIRECTORY, ADD TO THE FOLLOWING ARRAY
 # Note that any valid pathspec (https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec)
-# can be included for including subdirectories, etc
+# can be included for excluding subdirectories, etc
 declare -a toExclude=("README-public.md" # Public repo should only have the README which was replaced above.
                       ".github" # Exclude workflows
                       "examples" # Exclude internal examples
