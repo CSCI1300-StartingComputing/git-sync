@@ -56,29 +56,29 @@ ls -la
 
 echo "Replacing public README with README-public"
 mv README-public.md README.md
-rm README-public.md
 
-# Building a git add command by adding all files with an exclusion list
-gitAddCommand="git add --"
-
-# TO INCLUDE A NEW PUBLIC FILE OR DIRECTORY, ADD TO THE FOLLOWING ARRAY
+# TO EXCLUDE A PRIVATE FILE OR DIRECTORY, ADD TO THE FOLLOWING ARRAY
 # Note that any valid pathspec (https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec)
 # can be included for including subdirectories, etc
-declare -a toInclude=("README.md")
+declare -a toExclude=("README-public.md" # Public repo should only have the README which was replaced above.
+                      ".github" # Exclude workflows
+                      "examples" # Exclude internal examples
+                      ".gitignore" # Ignore gitignore for simplicity
+                      )
 
-for i in "${toInclude[@]}"
+# git rm all excluded pathspecs
+for i in "${toExclude[@]}"
 do
-    gitAddCommand=$gitAddCommand" ':$i'"
+    git rm $i
 done
-
-echo "Will run the following git add:\n$gitAddCommand"
-eval "$gitAddCommand"
 
 git config user.email "csci1300@colorado.edu"
 git config user.name "CSCI 1300"
+echo "Git status post-removal"
 git status
 echo "Committing..."
 git commit -m "Update CSCI 1300 Files"
+echo "Git status post-commit"
 git status
-
+echo "Pushing"
 git push destination "${SOURCE_BRANCH}:${DESTINATION_BRANCH}" -f
