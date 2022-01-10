@@ -78,7 +78,8 @@ git config user.name "CSCI 1300"
 echo "Git status post-removal"
 git status
 echo "Committing..."
-git commit --amend -m "Update CSCI 1300 Files"
+git commit --amend --no-edit
+git reset $(git commit-tree HEAD^{tree} -m "Update CSCI 1300 Files")
 echo "Git status post-commit"
 git status
 echo "Pushing"
