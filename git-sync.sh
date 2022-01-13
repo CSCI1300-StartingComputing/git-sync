@@ -66,6 +66,7 @@ declare -a toExclude=("README-public.md" # Public repo should only have the READ
                       "examples" # Exclude internal examples
                       ".gitignore" # Ignore gitignore for simplicity
                       ":(glob)homework/**/solutions/**" # Ignore everything inside solutions directories anywhere within homework
+                      "rubrics" # Exclude rubrics and grading scripts
                       )
 
 # git rm all excluded pathspecs
